@@ -32,4 +32,10 @@ public class EmployeeController {
         }
         return result;
     }
+
+    @PostMapping("/logout")
+    public R logout(HttpSession httpSession) {
+        httpSession.removeAttribute("employee");
+        return R.success("你已退出登录!");
+    }
 }
