@@ -1,13 +1,11 @@
 package com.itheima.reggie.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -46,5 +44,11 @@ public class EmployeeController {
         employee.setUpdateUser(employeeID);
         employeeService.addEmployee(employee);
         return R.success("添加成功!");
+    }
+
+    @GetMapping("/page")
+    public R pageConditionQuery(int page,int pageSize,String name){
+        Page<Employee> p = employeeService.pageConditionQuery(page,pageSize,name);
+        return R.success(p);
     }
 }

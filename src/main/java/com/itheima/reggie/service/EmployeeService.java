@@ -1,5 +1,6 @@
 package com.itheima.reggie.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
@@ -35,4 +36,13 @@ public interface EmployeeService extends IService<Employee> {
      * @param employee 员工对象
      */
     void addEmployee(Employee employee);
+
+    /**
+     * 3:分页条件查询所有员工
+     * @param page      当前页数
+     * @param pageSize  当前页数所展示的数据条数
+     * @param name      根据搜索,来展示数据
+     * @return Page对象,包含所有员工数据
+     */
+    Page<Employee> pageConditionQuery(int page,int pageSize,String name);
 }

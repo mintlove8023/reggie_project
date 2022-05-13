@@ -1,12 +1,14 @@
 package com.itheima.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.mapper.EmployeeMapper;
 import com.itheima.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -65,5 +67,16 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         //保存员工
         save(employee);
+    }
+
+    @Override
+    public Page<Employee> pageConditionQuery(int page, int pageSize, String name) {
+        //设置分页
+        Page<Employee> pages = new Page<>(page,pageSize);
+        //设置查询条件
+        LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(name),Employee::getName,name);
+        //返回分页条件查询的结果
+        return employeeMapper.selectPage(pages, queryWrapper);
     }
 }
