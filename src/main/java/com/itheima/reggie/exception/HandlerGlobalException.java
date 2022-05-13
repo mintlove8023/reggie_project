@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class HandlerGlobalException {
 
-    @ExceptionHandler(UserExistsException.class)
+    @ExceptionHandler({UserExistsException.class})
     public R handlerUserExistsException(UserExistsException e){
         return R.error(e.getMessage());
     }

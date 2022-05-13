@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
+import com.itheima.reggie.exception.UserExistsException;
 import com.itheima.reggie.mapper.EmployeeMapper;
 import com.itheima.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 /**
@@ -55,28 +57,52 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
     @Override
     public void addEmployee(Employee employee) {
-        //设置新增员工的默认登录密码
-        employee.setPassword(DigestUtils.md5DigestAsHex(EMPLOYEE_DEFAULT_PASSWORD.getBytes()));
+        try {
+            //设置新增员工的默认登录密码
+            employee.setPassword(DigestUtils.md5DigestAsHex(EMPLOYEE_DEFAULT_PASSWORD.getBytes()));
 
-        //设置新增员工默认为启用状态
-        employee.setStatus(EMPLOYEE_DEFAULT_STATUS);
+            //设置新增员工默认为启用状态
+            employee.setStatus(EMPLOYEE_DEFAULT_STATUS);
 
-        //设置员工创建时间与修改时间(默认为:当前系统时间)
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+            //设置员工创建时间与修改时间(默认为:当前系统时间)
+            employee.setCreateTime(LocalDateTime.now());
+            employee.setUpdateTime(LocalDateTime.now());
 
-        //保存员工
-        save(employee);
+            //保存员工
+            save(employee);
+        } catch (Exception e) {
+            throw new UserExistsException("用户已存在!无法添加");
+        }
     }
 
     @Override
     public Page<Employee> pageConditionQuery(int page, int pageSize, String name) {
         //设置分页
-        Page<Employee> pages = new Page<>(page,pageSize);
+        Page<Employee> pages = new Page<>(page, pageSize);
         //设置查询条件
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotBlank(name),Employee::getName,name);
+        queryWrapper.like(StringUtils.isNotBlank(name), Employee::getName, name);
         //返回分页条件查询的结果
         return employeeMapper.selectPage(pages, queryWrapper);
     }
+
+    @Override
+    public void updateEmployee(HttpSession httpSession, Employee employee) {
+        try {
+            //获取当前登录的用户ID
+            Long employeeID = (Long) httpSession.getAttribute("employee");
+            //设置修改时间和修改人
+            employee.setUpdateTime(LocalDateTime.now());
+            employee.setUpdateUser(employeeID);
+            updateById(employee);
+        } catch (Exception e) {
+            throw new UserExistsException("用户已存在!无法修改");
+        }
+    }
+
+    @Override
+    public Employee echoUpdateEmployeeData(Long id) {
+        return employeeMapper.selectById(id);
+    }
+
 }

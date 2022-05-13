@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
 
+import javax.servlet.http.HttpSession;
+
 /**
  * @author 小空
  * @create 2022-05-11 11:55
@@ -33,16 +35,35 @@ public interface EmployeeService extends IService<Employee> {
 
     /**
      * 2:添加员工业务
+     *
      * @param employee 员工对象
      */
     void addEmployee(Employee employee);
 
     /**
      * 3:分页条件查询所有员工
-     * @param page      当前页数
-     * @param pageSize  当前页数所展示的数据条数
-     * @param name      根据搜索,来展示数据
-     * @return Page对象,包含所有员工数据
+     *
+     * @param page     当前页数
+     * @param pageSize 当前页数所展示的数据条数
+     * @param name     根据搜索,来展示数据
+     * @return Page对象, 包含所有员工数据
      */
-    Page<Employee> pageConditionQuery(int page,int pageSize,String name);
+    Page<Employee> pageConditionQuery(int page, int pageSize, String name);
+
+    /**
+     * 修改员工数据
+     *
+     * @param employee    员工对象
+     * @param httpSession HttpSession对象,主要用来获取当前登录用户信息
+     * @return R
+     */
+    void updateEmployee(HttpSession httpSession, Employee employee);
+
+    /**
+     * 查询对应员工的数据,这里用于修改员工数据回显
+     *
+     * @param id 员工id
+     * @return 员工对象
+     */
+    Employee echoUpdateEmployeeData(Long id);
 }
