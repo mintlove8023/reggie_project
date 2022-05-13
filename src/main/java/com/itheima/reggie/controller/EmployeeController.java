@@ -38,4 +38,13 @@ public class EmployeeController {
         httpSession.removeAttribute("employee");
         return R.success("你已退出登录!");
     }
+
+    @PostMapping
+    public R addEmployee(HttpSession httpSession,@RequestBody Employee employee){
+        Long employeeID = (Long) httpSession.getAttribute("employee");
+        employee.setCreateUser(employeeID);
+        employee.setUpdateUser(employeeID);
+        employeeService.addEmployee(employee);
+        return R.success("添加成功!");
+    }
 }

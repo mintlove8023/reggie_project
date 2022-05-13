@@ -12,6 +12,11 @@ import com.itheima.reggie.domain.R;
  * @see com.itheima.reggie.service.impl.EmployeeServiceImpl
  */
 public interface EmployeeService extends IService<Employee> {
+    //员工默认密码
+    public final static String EMPLOYEE_DEFAULT_PASSWORD = "123456";
+    //员工默认状态
+    public final static Integer EMPLOYEE_DEFAULT_STATUS = 1;
+
     /**
      * 1:处理员工登录的业务逻辑
      * #1.1:查询数据库,判断用户名是否存在,如果存在进入下一步,否则返回提示
@@ -24,4 +29,10 @@ public interface EmployeeService extends IService<Employee> {
      * @return R
      */
     R login(Employee employee);
+
+    /**
+     * 2:添加员工业务
+     * @param employee 员工对象
+     */
+    void addEmployee(Employee employee);
 }

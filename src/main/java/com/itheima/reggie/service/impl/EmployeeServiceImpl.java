@@ -6,9 +6,12 @@ import com.itheima.reggie.domain.Employee;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.mapper.EmployeeMapper;
 import com.itheima.reggie.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 /**
  * @author 小空
@@ -17,6 +20,7 @@ import org.springframework.util.DigestUtils;
  * @see EmployeeService
  */
 @Service
+@Slf4j
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -45,5 +49,21 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         //登录成功,进行返回
         return R.success(emp);
+    }
+
+    @Override
+    public void addEmployee(Employee employee) {
+        //设置新增员工的默认登录密码
+        employee.setPassword(DigestUtils.md5DigestAsHex(EMPLOYEE_DEFAULT_PASSWORD.getBytes()));
+
+        //设置新增员工默认为启用状态
+        employee.setStatus(EMPLOYEE_DEFAULT_STATUS);
+
+        //设置员工创建时间与修改时间(默认为:当前系统时间)
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //保存员工
+        save(employee);
     }
 }
