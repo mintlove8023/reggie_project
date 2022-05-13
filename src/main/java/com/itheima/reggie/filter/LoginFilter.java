@@ -44,20 +44,17 @@ public class LoginFilter implements Filter {
         boolean isFilterChain = pathMatcher(urls, requestURI);
         //放行请求路径
         if (isFilterChain) {
-            log.info("拦截uri路径 -> 放行");
             filterChain.doFilter(request, response);
             return;
         }
 
         //判断是否为登录状态
         if (request.getSession().getAttribute("employee") != null) {
-            log.info("登录拦截 -> 放行");
             filterChain.doFilter(request, response);
             return;
         }
 
         //未登录,则不放行
-        log.info("不放行");
         response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
         return;
     }
