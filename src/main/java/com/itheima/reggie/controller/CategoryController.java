@@ -5,7 +5,6 @@ import com.itheima.reggie.domain.Category;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,5 +29,13 @@ public class CategoryController {
     public R pagingQuery(int page, int pageSize) {
         IPage<Category> p = categoryService.pagingQuery(page, pageSize);
         return R.success(p);
+    }
+
+    @PutMapping
+    public R updateCategory(@RequestBody Category category) {
+        //根据菜品类别id修改
+        categoryService.updateById(category);
+        //返回数据
+        return R.success("修改成功!");
     }
 }
