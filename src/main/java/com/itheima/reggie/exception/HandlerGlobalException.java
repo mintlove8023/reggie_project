@@ -15,7 +15,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class HandlerGlobalException {
 
     @ExceptionHandler({UserExistsException.class})
-    public R handlerUserExistsException(UserExistsException e){
+    public R handlerUserExistsException(UserExistsException e) {
+        return R.error(e.getMessage());
+    }
+
+    @ExceptionHandler(DishCategoryNotDeleteException.class)
+    public R handlerDishCategoryDeleteException(DishCategoryNotDeleteException e) {
         return R.error(e.getMessage());
     }
 

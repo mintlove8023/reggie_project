@@ -18,4 +18,16 @@ public interface CategoryService extends IService<Category> {
      * @return IPage对象, 包含查询到的分页数据
      */
     IPage<Category> pagingQuery(int page, int pageSize);
+
+    /**
+     * 根据id删除菜品类别
+     * 菜品类别分为单菜品和套餐菜品
+     * 如果这两个菜品类别下没有菜品数据,那么才可以进行菜品类别删除
+     * 否则不能删除,直接抛异常
+     *
+     * @param id 菜品类别id
+     * @see com.itheima.reggie.domain.Dish [单菜品]
+     * @see com.itheima.reggie.domain.Setmeal [套餐菜品]
+     */
+    void deleteCategory(Long id);
 }

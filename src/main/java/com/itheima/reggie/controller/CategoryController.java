@@ -38,4 +38,10 @@ public class CategoryController {
         //返回数据
         return R.success("修改成功!");
     }
+
+    @DeleteMapping
+    public R deleteCategory(Long id) {
+        categoryService.deleteCategory(id);
+        return R.success("删除成功!");
+    }
 }
