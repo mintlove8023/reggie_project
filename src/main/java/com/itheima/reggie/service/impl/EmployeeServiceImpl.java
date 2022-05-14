@@ -64,10 +64,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
             //设置新增员工默认为启用状态
             employee.setStatus(EMPLOYEE_DEFAULT_STATUS);
 
-            //设置员工创建时间与修改时间(默认为:当前系统时间)
-            employee.setCreateTime(LocalDateTime.now());
-            employee.setUpdateTime(LocalDateTime.now());
-
             //保存员工
             save(employee);
         } catch (Exception e) {
@@ -89,11 +85,6 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
     @Override
     public void updateEmployee(HttpSession httpSession, Employee employee) {
         try {
-            //获取当前登录的用户ID
-            Long employeeID = (Long) httpSession.getAttribute("employee");
-            //设置修改时间和修改人
-            employee.setUpdateTime(LocalDateTime.now());
-            employee.setUpdateUser(employeeID);
             updateById(employee);
         } catch (Exception e) {
             throw new UserExistsException("用户已存在!无法修改");

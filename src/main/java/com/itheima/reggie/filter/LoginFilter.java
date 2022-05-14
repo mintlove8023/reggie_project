@@ -1,6 +1,7 @@
 package com.itheima.reggie.filter;
 
 import com.alibaba.fastjson.JSON;
+import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.ComponentScan;
@@ -50,6 +51,9 @@ public class LoginFilter implements Filter {
 
         //判断是否为登录状态
         if (request.getSession().getAttribute("employee") != null) {
+            //设置当前登陆的员工id
+            Long empID = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setId(empID);
             filterChain.doFilter(request, response);
             return;
         }
