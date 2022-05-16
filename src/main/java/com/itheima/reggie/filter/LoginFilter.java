@@ -34,8 +34,9 @@ public class LoginFilter implements Filter {
         String[] urls = new String[]{
                 "/employee/login",
                 "/employee/logout",
+                "/common/**",
                 "/backend/**",
-                "/front/**",
+                "/front/**"
         };
 
         //获取请求路径
