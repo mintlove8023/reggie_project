@@ -61,4 +61,12 @@ public interface DishService extends IService<Dish> {
      * @param ids 存放菜品的id
      */
     void deleteDish(Long[] ids);
+
+    /**
+     * 修改Dish菜品售卖状态
+     *
+     * @param status 售卖状态
+     * @param ids    菜品id
+     */
+    void dishSaleStatus(Integer status, Long[] ids);
 }

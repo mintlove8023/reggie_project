@@ -2,8 +2,11 @@ package com.itheima.reggie.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.PageBean;
 import com.itheima.reggie.domain.Category;
@@ -122,5 +125,13 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     @Override
     public void deleteDish(Long[] ids) {
         removeByIds(Arrays.asList(ids));
+    }
+
+    @Override
+    public void dishSaleStatus(Integer status, Long[] ids) {
+        LambdaUpdateWrapper<Dish> queryWrapper = new LambdaUpdateWrapper<>();
+        queryWrapper.set(Dish::getStatus, status)
+                .in(Dish::getId, Arrays.asList(ids));
+        update(queryWrapper);
     }
 }

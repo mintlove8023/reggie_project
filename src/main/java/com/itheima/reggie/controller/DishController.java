@@ -1,11 +1,10 @@
 package com.itheima.reggie.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itheima.reggie.common.PageBean;
-import com.itheima.reggie.domain.Dish;
 import com.itheima.reggie.domain.DishDto;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.service.DishService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/dish")
+@Slf4j
 public class DishController {
     @Autowired
     private DishService dishService;
@@ -52,5 +52,11 @@ public class DishController {
     public R deleteDish(Long[] ids) {
         dishService.deleteDish(ids);
         return R.success("删除成功!");
+    }
+
+    @PostMapping("/status/{status}")
+    public R dishSaleStatus(@PathVariable Integer status, Long[] ids) {
+        dishService.dishSaleStatus(status, ids);
+        return R.success("起售成功!");
     }
 }
