@@ -124,6 +124,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     public void deleteDish(Long[] ids) {
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(DishFlavor::getDishId, Arrays.asList(ids));
+        dishFlavorService.remove(queryWrapper);
         removeByIds(Arrays.asList(ids));
     }
 
