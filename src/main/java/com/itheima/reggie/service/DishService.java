@@ -1,7 +1,10 @@
 package com.itheima.reggie.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itheima.reggie.common.PageBean;
 import com.itheima.reggie.domain.Dish;
+import com.itheima.reggie.domain.DishDto;
 
 /**
  * @author 小空
@@ -9,4 +12,30 @@ import com.itheima.reggie.domain.Dish;
  * @description 单菜品业务层接口
  */
 public interface DishService extends IService<Dish> {
+    /**
+     * 添加菜品
+     *
+     * @param dishDto Dish菜品对象
+     */
+    void addDish(DishDto dishDto);
+
+    /**
+     * 菜品管理分页条件查询(Mybatis-Plus)
+     *
+     * @param page     页数
+     * @param pageSize 当前页数展示的数据条数
+     * @param name     搜索条件
+     * @return Page对象, 包含了所以菜品信息
+     */
+    IPage<Dish> selectPagingCondition(int page, int pageSize, String name);
+
+    /**
+     * 菜品管理分页条件查询(Mybatis)
+     *
+     * @param page     页数
+     * @param pageSize 当前页数展示的数据条数
+     * @param name     搜索条件
+     * @return PageBean对象,包含了所以菜品信息
+     */
+    PageBean mybatisPagingFunction(int page, int pageSize, String name);
 }

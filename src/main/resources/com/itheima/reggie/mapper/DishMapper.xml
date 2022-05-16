@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.reggie.mapper.DishMapper">
+    <resultMap id="rm" type="com.itheima.reggie.domain.Dish">
+        <result property="categoryId" column="category_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="updateUser" column="update_user"/>
+        <result property="categoryName" column="cname"/>
+    </resultMap>
+    <select id="mybatisPagingFunction" resultMap="rm">
+        select dish.*,category.name cname from dish,category
+        <where>
+            category.id = dish.category_id
+            <if test="name != null">
+                and cname like concat('%',#{name},'%')
+            </if>
+        </where>
+        limit #{page},#{pageSize}
+    </select>
+
+    <select id="mybatisGetPagingTotal" resultType="int">
+        select count(*) from dish
+        <where>
+            <if test="name != null">
+                cname like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+</mapper>
