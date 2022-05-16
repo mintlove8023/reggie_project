@@ -16,9 +16,12 @@ import com.itheima.reggie.service.DishFlavorService;
 import com.itheima.reggie.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -77,5 +80,42 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         pb.setRecords(dishList);
         pb.setTotal(total);
         return pb;
+    }
+
+    @Override
+    public DishDto echoDishData(Long id) {
+        //查询菜品id
+        Dish dish = dishMapper.selectById(id);
+        //根据菜品id查询出口味信息(口味信息有多个)
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DishFlavor::getDishId, dish.getId());
+        List<DishFlavor> flavorList = dishFlavorService.list(queryWrapper);
+        //设置口味信息到DishDto
+        DishDto dishDto = new DishDto();
+        dishDto.setFlavors(flavorList);
+        //将Dish菜品数据封装数据到DishDto
+        BeanUtils.copyProperties(dish, dishDto);
+        return dishDto;
+    }
+
+    @Override
+    @Transactional
+    public void updateDish(DishDto dishDto) {
+        //1:修改存储Dish菜品基本信息到数据库
+        updateById(dishDto);
+
+        //2:清除口味信息
+        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(DishFlavor::getDishId, dishDto.getId());
+        dishFlavorService.remove(queryWrapper);
+
+        //2.1:遍历获取口味信息配置,并为口味设置菜品id
+        List<DishFlavor> flavors = dishDto.getFlavors();
+        for (DishFlavor dishFlavor : flavors) {
+            dishFlavor.setDishId(dishDto.getId());
+        }
+
+        //2.2:存储口味信息到数据库
+        dishFlavorService.saveBatch(flavors);
     }
 }

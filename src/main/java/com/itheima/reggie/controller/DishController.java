@@ -35,4 +35,16 @@ public class DishController {
         PageBean p = dishService.mybatisPagingFunction(page, pageSize, name);
         return R.success(p);
     }
+
+    @GetMapping("{id}")
+    public R echoDishData(@PathVariable Long id) {
+        DishDto dishDto = dishService.echoDishData(id);
+        return R.success(dishDto);
+    }
+
+    @PutMapping
+    public R updateDish(@RequestBody DishDto dishDto) {
+        dishService.updateDish(dishDto);
+        return R.success("修改成功!");
+    }
 }
