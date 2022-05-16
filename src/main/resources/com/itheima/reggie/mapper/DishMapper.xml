@@ -15,7 +15,7 @@
         <where>
             category.id = dish.category_id
             <if test="name != null">
-                and cname like concat('%',#{name},'%')
+                and dish.name like concat('%',#{name},'%')
             </if>
         </where>
         limit #{page},#{pageSize}
@@ -25,7 +25,7 @@
         select count(*) from dish
         <where>
             <if test="name != null">
-                cname like concat('%',#{name},'%')
+                dish.name like concat('%',#{name},'%')
             </if>
         </where>
     </select>
