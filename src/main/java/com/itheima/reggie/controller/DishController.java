@@ -47,4 +47,10 @@ public class DishController {
         dishService.updateDish(dishDto);
         return R.success("修改成功!");
     }
+
+    @DeleteMapping
+    public R deleteDish(Long[] ids) {
+        dishService.deleteDish(ids);
+        return R.success("删除成功!");
+    }
 }

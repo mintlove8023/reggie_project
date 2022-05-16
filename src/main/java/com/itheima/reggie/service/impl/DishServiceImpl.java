@@ -118,4 +118,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         //2.2:存储口味信息到数据库
         dishFlavorService.saveBatch(flavors);
     }
+
+    @Override
+    public void deleteDish(Long[] ids) {
+        removeByIds(Arrays.asList(ids));
+    }
 }

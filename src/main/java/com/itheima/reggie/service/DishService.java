@@ -54,4 +54,11 @@ public interface DishService extends IService<Dish> {
      * @param dishDto DishDto对象, 包含菜品基本信息和口味信息
      */
     void updateDish(DishDto dishDto);
+
+    /**
+     * 删除Dish菜品,包括了批量删除
+     *
+     * @param ids 存放菜品的id
+     */
+    void deleteDish(Long[] ids);
 }
