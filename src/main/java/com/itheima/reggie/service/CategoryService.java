@@ -3,6 +3,7 @@ package com.itheima.reggie.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Category;
+import com.itheima.reggie.domain.R;
 
 /**
  * @author 小空
@@ -30,4 +31,12 @@ public interface CategoryService extends IService<Category> {
      * @see com.itheima.reggie.domain.Setmeal [套餐菜品]
      */
     void deleteCategory(Long id);
+
+    /**
+     * 查找菜品分类
+     *
+     * @param type 菜品分类类型
+     * @return R, 包含菜品分类信息
+     */
+    R findDishCategoryByType(int type);
 }

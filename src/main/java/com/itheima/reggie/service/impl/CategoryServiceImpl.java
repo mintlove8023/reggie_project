@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.domain.Category;
 import com.itheima.reggie.domain.Dish;
+import com.itheima.reggie.domain.R;
 import com.itheima.reggie.domain.Setmeal;
 import com.itheima.reggie.exception.DishCategoryNotDeleteException;
 import com.itheima.reggie.mapper.CategoryMapper;
@@ -55,5 +56,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
         //否则抛出异常,表示删除菜品类别失败!
         throw new DishCategoryNotDeleteException("菜品删除失败!该菜品类别下有已保存的菜品或套餐");
+    }
+
+    @Override
+    public R findDishCategoryByType(int type) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getType, type);
+        return R.success(list(queryWrapper));
     }
 }

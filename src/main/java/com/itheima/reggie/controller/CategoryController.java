@@ -44,4 +44,9 @@ public class CategoryController {
         categoryService.deleteCategory(id);
         return R.success("删除成功!");
     }
+
+    @GetMapping("/list")
+    public R findDishCategoryByType(int type) {
+        return categoryService.findDishCategoryByType(type);
+    }
 }
