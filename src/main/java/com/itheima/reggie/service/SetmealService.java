@@ -46,4 +46,12 @@ public interface SetmealService extends IService<Setmeal> {
      * @param ids 套餐id数据
      */
     void deleteSetmeal(Long[] ids);
+
+    /**
+     * 批量起售与停售套餐
+     *
+     * @param status 起售停售状态
+     * @param ids    套餐id
+     */
+    void updateSetmealStatus(Integer status, Long[] ids);
 }

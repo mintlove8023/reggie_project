@@ -36,4 +36,10 @@ public class SetmealController {
         setmealService.deleteSetmeal(ids);
         return R.success("删除成功!");
     }
+
+    @PostMapping("/status/{status}")
+    public R updateSetmealStatus(@PathVariable Integer status, Long[] ids) {
+        setmealService.updateSetmealStatus(status, ids);
+        return R.success("状态修改成功!");
+    }
 }
