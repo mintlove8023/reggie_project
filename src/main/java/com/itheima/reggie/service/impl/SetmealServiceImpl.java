@@ -8,6 +8,7 @@ import com.itheima.reggie.domain.Category;
 import com.itheima.reggie.domain.Setmeal;
 import com.itheima.reggie.domain.SetmealDish;
 import com.itheima.reggie.domain.SetmealDto;
+import com.itheima.reggie.exception.SetmealEnableStatusException;
 import com.itheima.reggie.mapper.SetmealMapper;
 import com.itheima.reggie.service.CategoryService;
 import com.itheima.reggie.service.SetmealDishService;
@@ -16,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -63,5 +65,23 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         return p;
     }
 
-    
+    @Override
+    public void deleteSetmeal(Long[] ids) {
+        //1:必须先判断套餐是否为启用状态,如果为启用状态,则抛出错误提示,告诉不能删除
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Setmeal::getStatus, SETMEAL_STATUS_ENABLE).in(Setmeal::getId, Arrays.asList(ids));
+        int count = count(queryWrapper);
+
+        if (count > 0) {
+            throw new SetmealEnableStatusException("该套餐已起售,请停售后再进行操作!");
+        }
+
+        //2:停售后,还需要判断当前套餐下是否有菜品数据,有,则删除,没有则删除套餐
+        LambdaQueryWrapper<SetmealDish> qw = new LambdaQueryWrapper<>();
+        qw.in(SetmealDish::getSetmealId, Arrays.asList(ids));
+        setmealDishService.remove(qw);
+
+        //3:删除套餐
+        removeByIds(Arrays.asList(ids));
+    }
 }

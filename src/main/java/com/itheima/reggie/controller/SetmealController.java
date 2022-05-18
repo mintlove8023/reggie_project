@@ -8,8 +8,6 @@ import com.itheima.reggie.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
 /**
  * @author 小空
  * @create 2022-05-18 10:11
@@ -31,5 +29,11 @@ public class SetmealController {
     public R setmealPagingByCondition(int page, int pageSize, String name) {
         IPage<Setmeal> p = setmealService.setmealPagingByCondition(page, pageSize, name);
         return R.success(p);
+    }
+
+    @DeleteMapping
+    public R deleteSetmeal(Long[] ids) {
+        setmealService.deleteSetmeal(ids);
+        return R.success("删除成功!");
     }
 }

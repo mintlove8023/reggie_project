@@ -13,6 +13,15 @@ import com.itheima.reggie.domain.SetmealDto;
  */
 public interface SetmealService extends IService<Setmeal> {
     /**
+     * 套餐启用状态
+     */
+    int SETMEAL_STATUS_ENABLE = 1;
+    /**
+     * 套餐禁用状态
+     */
+    int SETMEAL_STATUS_DISABLE = 0;
+
+    /**
      * 添加套餐
      *
      * @param setmealDto
@@ -28,4 +37,13 @@ public interface SetmealService extends IService<Setmeal> {
      * @return Page对象, 展示出套餐分页数据
      */
     IPage<Setmeal> setmealPagingByCondition(int page, int pageSize, String name);
+
+    /**
+     * 批量删除套餐
+     * 1:必须先判断套餐是否为启用状态,如果为启用状态,则抛出错误提示,告诉不能删除
+     * 2:停售后,还需要判断当前套餐下是否有菜品数据,有,则删除,没有则删除套餐
+     *
+     * @param ids 套餐id数据
+     */
+    void deleteSetmeal(Long[] ids);
 }

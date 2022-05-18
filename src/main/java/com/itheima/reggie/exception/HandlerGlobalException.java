@@ -24,4 +24,8 @@ public class HandlerGlobalException {
         return R.error(e.getMessage());
     }
 
+    @ExceptionHandler(SetmealEnableStatusException.class)
+    public R handlerSetmealEnableStatusException(SetmealEnableStatusException e) {
+        return R.error(e.getMessage());
+    }
 }
