@@ -36,7 +36,9 @@ public class LoginFilter implements Filter {
                 "/employee/logout",
                 "/common/**",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/user/sendMsg",
+                "/user/login"
         };
 
         //获取请求路径
@@ -56,6 +58,15 @@ public class LoginFilter implements Filter {
             Long empID = (Long) request.getSession().getAttribute("employee");
             BaseContext.setId(empID);
             filterChain.doFilter(request, response);
+            return;
+        }
+
+        //判断移动端前台用户是否登录
+        if (request.getSession().getAttribute("user") != null) {
+            Long empID = (Long) request.getSession().getAttribute("user");
+            BaseContext.setId(empID);
+            filterChain.doFilter(request, response);
+            BaseContext.remove();
             return;
         }
 

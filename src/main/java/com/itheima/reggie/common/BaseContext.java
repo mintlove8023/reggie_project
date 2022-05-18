@@ -21,9 +21,19 @@ public class BaseContext {
 
     /**
      * 获取id值
+     *
      * @return 员工id
      */
     public static Long getId() {
         return threadLocal.get();
     }
+
+    /**
+     * 清除线程值
+     */
+    public static void remove() {
+        threadLocal.remove();
+    }
+
+
 }

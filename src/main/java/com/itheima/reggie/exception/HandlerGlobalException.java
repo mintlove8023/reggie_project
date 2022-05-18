@@ -28,4 +28,9 @@ public class HandlerGlobalException {
     public R handlerSetmealEnableStatusException(SetmealEnableStatusException e) {
         return R.error(e.getMessage());
     }
+
+    @ExceptionHandler(SendMessageInternetException.class)
+    public R handlerSendMessageInternetException(SendMessageInternetException e) {
+        return R.error(e.getMessage());
+    }
 }
