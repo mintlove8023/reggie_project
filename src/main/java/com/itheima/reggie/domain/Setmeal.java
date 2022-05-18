@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ public class Setmeal implements Serializable {
     //分类id
     private Long categoryId;
 
+    @TableField(exist = false)
+    private String categoryName;
 
     //套餐名称
     private String name;
