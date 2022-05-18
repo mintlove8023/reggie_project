@@ -1,12 +1,14 @@
 package com.itheima.reggie.controller;
 
 import com.itheima.reggie.common.PageBean;
-import com.itheima.reggie.domain.DishDto;
-import com.itheima.reggie.domain.R;
+import com.itheima.reggie.domain.*;
 import com.itheima.reggie.service.DishService;
+import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 小空
@@ -58,5 +60,11 @@ public class DishController {
     public R dishSaleStatus(@PathVariable Integer status, Long[] ids) {
         dishService.dishSaleStatus(status, ids);
         return R.success("起售成功!");
+    }
+
+    @GetMapping("/list")
+    public R selectDishByCategoryId(Long categoryId) {
+        List<Dish> setmealList = dishService.selectDishByCategoryId(categoryId);
+        return R.success(setmealList);
     }
 }

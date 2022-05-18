@@ -9,14 +9,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.PageBean;
-import com.itheima.reggie.domain.Category;
-import com.itheima.reggie.domain.Dish;
-import com.itheima.reggie.domain.DishDto;
-import com.itheima.reggie.domain.DishFlavor;
+import com.itheima.reggie.domain.*;
 import com.itheima.reggie.mapper.DishMapper;
-import com.itheima.reggie.service.CategoryService;
-import com.itheima.reggie.service.DishFlavorService;
-import com.itheima.reggie.service.DishService;
+import com.itheima.reggie.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +38,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SetmealDishService setmealDishService;
 
     @Override
     public void addDish(DishDto dishDto) {
@@ -136,5 +134,12 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         queryWrapper.set(Dish::getStatus, status)
                 .in(Dish::getId, Arrays.asList(ids));
         update(queryWrapper);
+    }
+
+    @Override
+    public List<Dish> selectDishByCategoryId(Long categoryId) {
+        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Dish::getCategoryId, categoryId);
+        return list(queryWrapper);
     }
 }

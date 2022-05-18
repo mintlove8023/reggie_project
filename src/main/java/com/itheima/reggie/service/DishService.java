@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.common.PageBean;
 import com.itheima.reggie.domain.Dish;
 import com.itheima.reggie.domain.DishDto;
+import com.itheima.reggie.domain.SetmealDish;
+import com.itheima.reggie.domain.SetmealDto;
+
+import java.util.List;
 
 /**
  * @author 小空
@@ -69,4 +73,12 @@ public interface DishService extends IService<Dish> {
      * @param ids    菜品id
      */
     void dishSaleStatus(Integer status, Long[] ids);
+
+    /**
+     * 根据菜品分类id查询对应的所有菜品信息
+     *
+     * @param categoryId 菜品分类id
+     * @return List集合, 包含了指定菜系下的菜品
+     */
+    List<Dish> selectDishByCategoryId(Long categoryId);
 }
