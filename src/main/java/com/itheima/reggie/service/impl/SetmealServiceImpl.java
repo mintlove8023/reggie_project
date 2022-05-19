@@ -96,7 +96,8 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     @Override
     public List<Setmeal> selectSetmealByCategoryId(Long categoryId) {
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Setmeal::getCategoryId,categoryId);
+        queryWrapper.eq(Setmeal::getCategoryId, categoryId)
+                .eq(Setmeal::getStatus, SETMEAL_STATUS_ENABLE);
         return list(queryWrapper);
     }
 }
