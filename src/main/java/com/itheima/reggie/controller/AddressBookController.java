@@ -2,7 +2,6 @@ package com.itheima.reggie.controller;
 
 import com.itheima.reggie.domain.AddressBook;
 import com.itheima.reggie.domain.R;
-import com.itheima.reggie.mapper.AddressBookMapper;
 import com.itheima.reggie.service.AddressBookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -52,5 +51,17 @@ public class AddressBookController {
             return R.error("获取收获地址失败!");
         }
         return R.success(addressList);
+    }
+
+    /**
+     * 设置默认地址
+     *
+     * @param addressBook AddressBook对象
+     * @return R
+     */
+    @PutMapping("/default")
+    public R updateDefaultShippingAddress(HttpSession httpSession, @RequestBody AddressBook addressBook) {
+        addressBookService.updateDefaultShippingAddress(httpSession, addressBook);
+        return R.success("已将当前地址设为默认地址!");
     }
 }

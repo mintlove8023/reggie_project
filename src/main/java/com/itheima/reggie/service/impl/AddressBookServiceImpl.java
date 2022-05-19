@@ -1,11 +1,13 @@
 package com.itheima.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.domain.AddressBook;
 import com.itheima.reggie.mapper.AddressBookMapper;
 import com.itheima.reggie.service.AddressBookService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -29,5 +31,21 @@ public class AddressBookServiceImpl extends ServiceImpl<AddressBookMapper, Addre
             return list(queryWrapper);
         }
         return null;
+    }
+
+    @Override
+    @Transactional
+    public void updateDefaultShippingAddress(HttpSession httpSession, AddressBook addressBook) {
+        Long userId = (Long) httpSession.getAttribute("user");
+
+        //1:先把所有收获地址默认设置为0
+        LambdaUpdateWrapper<AddressBook> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(AddressBook::getIsDefault, NOT_DEFAUTLT_ADDRESS).in(AddressBook::getUserId, userId);
+        update(updateWrapper);
+
+        //2:然后再设置选中的默认地址
+        LambdaUpdateWrapper<AddressBook> uw = new LambdaUpdateWrapper<>();
+        uw.set(AddressBook::getIsDefault, IS_DEFAUTLT_ADDRESS).in(AddressBook::getId, addressBook.getId());
+        update(uw);
     }
 }
