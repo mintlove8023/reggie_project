@@ -55,4 +55,14 @@ public class AddressBookServiceImpl extends ServiceImpl<AddressBookMapper, Addre
         queryWrapper.eq(AddressBook::getId, id);
         return getOne(queryWrapper);
     }
+
+    @Override
+    public void updateAddressBook(AddressBook addressBook) {
+        //判断当前的地址是否为默认地址,如果是默认地址,则设置默认地址后再进行修改
+        if (addressBook.getIsDefault() == 1) {
+            addressBook.setIsDefault(IS_DEFAUTLT_ADDRESS);
+        }
+        //修改当前地址
+        updateById(addressBook);
+    }
 }

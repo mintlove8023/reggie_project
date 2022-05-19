@@ -43,4 +43,12 @@ public interface AddressBookService extends IService<AddressBook> {
      * @param id 收货地址id
      */
     AddressBook echoAddressBookById(Long id);
+
+    /**
+     * 修改收货地址,如果当前地址已被设置为默认收货地址
+     * 需要将默认收货地址的标识给设置回去
+     *
+     * @param addressBook AddressBook对象,里面包含了JSON数据
+     */
+    void updateAddressBook(AddressBook addressBook);
 }

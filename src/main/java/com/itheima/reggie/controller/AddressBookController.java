@@ -76,4 +76,17 @@ public class AddressBookController {
         AddressBook addressBook = addressBookService.echoAddressBookById(id);
         return R.success(addressBook);
     }
+
+    /**
+     * 修改收货地址,如果当前地址已被设置为默认收货地址
+     * 需要将默认收货地址的标识给设置回去
+     *
+     * @param addressBook AddressBook
+     * @return R
+     */
+    @PutMapping
+    public R updateAddressBook(@RequestBody AddressBook addressBook) {
+        addressBookService.updateAddressBook(addressBook);
+        return R.success("修改成功!");
+    }
 }
