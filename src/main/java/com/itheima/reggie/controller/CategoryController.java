@@ -46,7 +46,7 @@ public class CategoryController {
     }
 
     @GetMapping("/list")
-    public R findDishCategoryByType(int type) {
+    public R findDishCategoryByType(Integer type) {
         return categoryService.findDishCategoryByType(type);
     }
 }

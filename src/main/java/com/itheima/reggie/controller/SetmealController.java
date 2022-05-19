@@ -8,6 +8,8 @@ import com.itheima.reggie.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author 小空
  * @create 2022-05-18 10:11
@@ -41,5 +43,11 @@ public class SetmealController {
     public R updateSetmealStatus(@PathVariable Integer status, Long[] ids) {
         setmealService.updateSetmealStatus(status, ids);
         return R.success("状态修改成功!");
+    }
+
+    @GetMapping("/list")
+    public R selectSetmealByCategoryId(Long categoryId) {
+        List<Setmeal> setmealList = setmealService.selectSetmealByCategoryId(categoryId);
+        return R.success(setmealList);
     }
 }

@@ -59,9 +59,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     }
 
     @Override
-    public R findDishCategoryByType(int type) {
+    public R findDishCategoryByType(Integer type) {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Category::getType, type);
+        queryWrapper.eq(type != null, Category::getType, type);
         return R.success(list(queryWrapper));
     }
 }

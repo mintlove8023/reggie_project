@@ -38,5 +38,5 @@ public interface CategoryService extends IService<Category> {
      * @param type 菜品分类类型
      * @return R, 包含菜品分类信息
      */
-    R findDishCategoryByType(int type);
+    R findDishCategoryByType(Integer type);
 }

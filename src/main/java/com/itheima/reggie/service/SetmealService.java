@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Setmeal;
 import com.itheima.reggie.domain.SetmealDto;
 
+import java.util.List;
+
 /**
  * @author 小空
  * @create 2022-05-14 14:48
@@ -54,4 +56,12 @@ public interface SetmealService extends IService<Setmeal> {
      * @param ids    套餐id
      */
     void updateSetmealStatus(Integer status, Long[] ids);
+
+    /**
+     * 根据CategoryId(分类id)查询所有套餐
+     *
+     * @param categoryId 分类id
+     * @return List集合, 包含所有套餐
+     */
+    List<Setmeal> selectSetmealByCategoryId(Long categoryId);
 }
