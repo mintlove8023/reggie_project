@@ -89,4 +89,10 @@ public class AddressBookController {
         addressBookService.updateAddressBook(addressBook);
         return R.success("修改成功!");
     }
+
+    @DeleteMapping
+    public R deleteAddressBook(Long ids) {
+        addressBookService.removeById(ids);
+        return R.success("删除成功!");
+    }
 }
