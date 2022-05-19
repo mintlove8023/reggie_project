@@ -64,4 +64,16 @@ public class AddressBookController {
         addressBookService.updateDefaultShippingAddress(httpSession, addressBook);
         return R.success("已将当前地址设为默认地址!");
     }
+
+    /**
+     * 修改收货地址数据回显
+     *
+     * @param id 收货地址id
+     * @return AddressBook对象, 包含收货地址的信息
+     */
+    @GetMapping("{id}")
+    public R echoAddressBookById(@PathVariable Long id) {
+        AddressBook addressBook = addressBookService.echoAddressBookById(id);
+        return R.success(addressBook);
+    }
 }

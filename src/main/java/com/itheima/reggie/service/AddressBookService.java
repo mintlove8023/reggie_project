@@ -36,4 +36,11 @@ public interface AddressBookService extends IService<AddressBook> {
      * @param addressBook AddressBook对象
      */
     void updateDefaultShippingAddress(HttpSession httpSession, AddressBook addressBook);
+
+    /**
+     * 修改收货地址
+     *
+     * @param id 收货地址id
+     */
+    AddressBook echoAddressBookById(Long id);
 }

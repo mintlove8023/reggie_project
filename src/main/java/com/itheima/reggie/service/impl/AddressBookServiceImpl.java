@@ -48,4 +48,11 @@ public class AddressBookServiceImpl extends ServiceImpl<AddressBookMapper, Addre
         uw.set(AddressBook::getIsDefault, IS_DEFAUTLT_ADDRESS).in(AddressBook::getId, addressBook.getId());
         update(uw);
     }
+
+    @Override
+    public AddressBook echoAddressBookById(Long id) {
+        LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AddressBook::getId, id);
+        return getOne(queryWrapper);
+    }
 }
