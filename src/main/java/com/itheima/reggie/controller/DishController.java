@@ -64,7 +64,7 @@ public class DishController {
 
     @GetMapping("/list")
     public R selectDishByCategoryId(Long categoryId) {
-        List<Dish> setmealList = dishService.selectDishByCategoryId(categoryId);
+        List<DishDto> setmealList = dishService.selectDishByCategoryId(categoryId);
         return R.success(setmealList);
     }
 }

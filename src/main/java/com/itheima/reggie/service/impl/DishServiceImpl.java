@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author 小空
@@ -137,9 +140,32 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
     }
 
     @Override
-    public List<Dish> selectDishByCategoryId(Long categoryId) {
+    public List<DishDto> selectDishByCategoryId(Long categoryId) {
+        //根据菜品分类查询所有非停售的菜品
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Dish::getCategoryId, categoryId);
-        return list(queryWrapper);
+        queryWrapper.eq(Dish::getCategoryId, categoryId)
+                .eq(Dish::getStatus, 1);
+        List<Dish> list = list(queryWrapper);
+
+        //根据菜品id查询指定的菜品口味
+        List<DishDto> dishDtoList = list.stream().map(item -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            Long cid = item.getCategoryId();
+            Category category = categoryService.getById(cid);
+            if (category != null) {
+                dishDto.setCategoryName(category.getName());
+            }
+
+            //获取菜品id
+            Long dishId = item.getId();
+            LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(DishFlavor::getDishId, dishId);
+            List<DishFlavor> dishFlavorList = dishFlavorService.list(lqw);
+            //设置菜品口味
+            dishDto.setFlavors(dishFlavorList);
+            return dishDto;
+        }).collect(Collectors.toList());
+        return dishDtoList;
     }
 }
