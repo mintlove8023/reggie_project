@@ -103,4 +103,18 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         }
         return shopCar;
     }
+
+    @Override
+    public R clearShoppingCart() {
+        Long userId = BaseContext.getId();
+        System.out.println("[" + userId + "]");
+        if (userId != null) {
+            LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(ShoppingCart::getUserId, userId);
+            //清空购物车所有数据
+            remove(queryWrapper);
+            return R.success("清除成功!");
+        }
+        return R.error("清除失败!");
+    }
 }

@@ -1,6 +1,7 @@
 package com.itheima.reggie.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.itheima.reggie.domain.R;
 import com.itheima.reggie.domain.ShoppingCart;
 
 import java.util.List;
@@ -32,4 +33,9 @@ public interface ShoppingCartService extends IService<ShoppingCart> {
      * @return ShoppingCart对象
      */
     ShoppingCart subtractionShoppingCart(ShoppingCart shoppingCart);
+
+    /**
+     * 清除购物车所有菜品/套餐
+     */
+    R clearShoppingCart();
 }

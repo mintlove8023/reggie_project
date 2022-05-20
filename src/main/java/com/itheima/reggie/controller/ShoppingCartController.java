@@ -45,4 +45,9 @@ public class ShoppingCartController {
         ShoppingCart shopCar = shoppingCartService.subtractionShoppingCart(shoppingCart);
         return R.success(shopCar);
     }
+
+    @DeleteMapping("/clean")
+    public R clearShoppingCart() {
+        return shoppingCartService.clearShoppingCart();
+    }
 }
