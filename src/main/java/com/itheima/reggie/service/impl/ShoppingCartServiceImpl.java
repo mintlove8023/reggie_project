@@ -1,6 +1,7 @@
 package com.itheima.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.R;
@@ -76,5 +77,30 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
         LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ShoppingCart::getUserId, userId).orderByAsc(ShoppingCart::getCreateTime);
         return list(queryWrapper);
+    }
+
+    @Override
+    public ShoppingCart subtractionShoppingCart(ShoppingCart shoppingCart) {
+        //先查询出这个菜品在数据库中是否存在
+        Long dishId = shoppingCart.getDishId();
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        if (dishId != null) {
+            queryWrapper.eq(ShoppingCart::getDishId, dishId);
+        } else {
+            queryWrapper.eq(ShoppingCart::getSetmealId, shoppingCart.getSetmealId());
+        }
+
+        ShoppingCart shopCar = getOne(queryWrapper);
+        if (shopCar != null) {
+            Integer num = shopCar.getNumber();
+            if (num > 0) {
+                shopCar.setNumber(num - 1);
+                updateById(shopCar);
+                if (num == 1) {
+                    removeById(shopCar);
+                }
+            }
+        }
+        return shopCar;
     }
 }

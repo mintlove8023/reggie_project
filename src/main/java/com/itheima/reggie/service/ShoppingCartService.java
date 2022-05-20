@@ -24,4 +24,12 @@ public interface ShoppingCartService extends IService<ShoppingCart> {
      * @return List集合, 包含购物车点餐信息
      */
     List<ShoppingCart> selectShoppingCartByType();
+
+    /**
+     * 减去购物车菜品/套餐数量
+     *
+     * @param shoppingCart ShoppingCart对象,包含了购物车中点餐的信息
+     * @return ShoppingCart对象
+     */
+    ShoppingCart subtractionShoppingCart(ShoppingCart shoppingCart);
 }

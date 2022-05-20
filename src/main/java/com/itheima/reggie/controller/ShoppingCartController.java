@@ -39,4 +39,10 @@ public class ShoppingCartController {
         ShoppingCart shopCar = shoppingCartService.joinTheShoppingCart(shoppingCart);
         return R.success(shopCar);
     }
+
+    @PostMapping("/sub")
+    public R subtractionShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+        ShoppingCart shopCar = shoppingCartService.subtractionShoppingCart(shoppingCart);
+        return R.success(shopCar);
+    }
 }
