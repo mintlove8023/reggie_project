@@ -51,4 +51,11 @@ public interface AddressBookService extends IService<AddressBook> {
      * @param addressBook AddressBook对象,里面包含了JSON数据
      */
     void updateAddressBook(AddressBook addressBook);
+
+    /**
+     * 根据当前已登录用户id查询默认收货地址
+     *
+     * @return 收货地址
+     */
+    AddressBook selectDefaultAddress();
 }

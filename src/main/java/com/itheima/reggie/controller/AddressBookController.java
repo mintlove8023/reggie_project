@@ -3,6 +3,7 @@ package com.itheima.reggie.controller;
 import com.itheima.reggie.domain.AddressBook;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.service.AddressBookService;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,5 +95,12 @@ public class AddressBookController {
     public R deleteAddressBook(Long ids) {
         addressBookService.removeById(ids);
         return R.success("删除成功!");
+    }
+
+    //TODO:[Bug]订单页面完默认地址后,页面不刷新
+    @GetMapping("/default")
+    public R selectDefaultAddress() {
+        AddressBook address = addressBookService.selectDefaultAddress();
+        return R.success(address);
     }
 }

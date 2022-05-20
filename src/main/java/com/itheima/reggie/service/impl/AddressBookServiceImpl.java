@@ -3,6 +3,7 @@ package com.itheima.reggie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.AddressBook;
 import com.itheima.reggie.mapper.AddressBookMapper;
 import com.itheima.reggie.service.AddressBookService;
@@ -64,5 +65,16 @@ public class AddressBookServiceImpl extends ServiceImpl<AddressBookMapper, Addre
         }
         //修改当前地址
         updateById(addressBook);
+    }
+
+    @Override
+    public AddressBook selectDefaultAddress() {
+        Long userId = BaseContext.getId();
+        if (userId != null) {
+            LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(AddressBook::getUserId, userId).eq(AddressBook::getIsDefault, IS_DEFAUTLT_ADDRESS);
+            return getOne(queryWrapper);
+        }
+        return null;
     }
 }
