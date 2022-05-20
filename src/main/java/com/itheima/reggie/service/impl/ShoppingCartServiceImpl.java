@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author 小空
@@ -67,5 +68,13 @@ public class ShoppingCartServiceImpl extends ServiceImpl<ShoppingCartMapper, Sho
             shopCar = shoppingCart;
         }
         return shopCar;
+    }
+
+    @Override
+    public List<ShoppingCart> selectShoppingCartByType() {
+        Long userId = BaseContext.getId();
+        LambdaQueryWrapper<ShoppingCart> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ShoppingCart::getUserId, userId).orderByAsc(ShoppingCart::getCreateTime);
+        return list(queryWrapper);
     }
 }
