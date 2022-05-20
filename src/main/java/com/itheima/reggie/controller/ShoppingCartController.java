@@ -2,9 +2,9 @@ package com.itheima.reggie.controller;
 
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.domain.ShoppingCart;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.itheima.reggie.service.ShoppingCartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
@@ -16,9 +16,19 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/shoppingCart")
 public class ShoppingCartController {
+    @Autowired
+    private ShoppingCartService shoppingCartService;
+
     @GetMapping("/list")
     public R selectShoppingCartByType() {
         ArrayList<ShoppingCart> arrayList = new ArrayList<>();
         return R.success(arrayList);
+    }
+
+
+    @PostMapping("/add")
+    public R joinTheShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+        ShoppingCart shopCar = shoppingCartService.joinTheShoppingCart(shoppingCart);
+        return R.success(shopCar);
     }
 }

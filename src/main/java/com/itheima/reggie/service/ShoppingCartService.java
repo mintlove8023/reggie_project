@@ -10,4 +10,8 @@ import com.itheima.reggie.domain.ShoppingCart;
  * @see com.itheima.reggie.service.impl.ShoppingCartServiceImpl
  */
 public interface ShoppingCartService extends IService<ShoppingCart> {
+    /**
+     * @param shoppingCart ShoppingCart对象,包含了购物车中点餐的信息
+     */
+    ShoppingCart joinTheShoppingCart(ShoppingCart shoppingCart);
 }
