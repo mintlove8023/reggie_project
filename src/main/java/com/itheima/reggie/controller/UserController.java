@@ -1,5 +1,6 @@
 package com.itheima.reggie.controller;
 
+import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.domain.User;
 import com.itheima.reggie.service.UserService;
@@ -43,5 +44,13 @@ public class UserController {
         //获取验证码
         R login = userService.login(httpSession, user);
         return R.success(login);
+    }
+
+    @PostMapping("/loginout")
+    public R loginout(HttpSession httpSession) {
+        //退出登录
+        httpSession.removeAttribute("user");
+        BaseContext.remove();
+        return R.success("退出登录!");
     }
 }
