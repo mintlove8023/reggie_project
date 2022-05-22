@@ -79,4 +79,11 @@ public interface SetmealService extends IService<Setmeal> {
      * @return SetmealDto, 包含套餐基本信息,和套餐下的菜品数据
      */
     SetmealDto echoSetmealById(Long id);
+
+    /**
+     * 修改套餐
+     *
+     * @param setmealDto 套餐Dto
+     */
+    void updateSetmeal(SetmealDto setmealDto);
 }

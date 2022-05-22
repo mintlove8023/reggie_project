@@ -60,4 +60,10 @@ public class SetmealController {
         SetmealDto setmealDto = setmealService.echoSetmealById(id);
         return R.success(setmealDto);
     }
+
+    @PutMapping
+    public R updateSetmeal(@RequestBody SetmealDto setmealDto) {
+        setmealService.updateSetmeal(setmealDto);
+        return R.success("套餐修改成功!");
+    }
 }

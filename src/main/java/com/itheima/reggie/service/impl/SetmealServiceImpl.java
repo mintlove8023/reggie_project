@@ -137,4 +137,24 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         BeanUtils.copyProperties(setmeal, setmealDto);
         return setmealDto;
     }
+
+    @Override
+    public void updateSetmeal(SetmealDto setmealDto) {
+        updateById(setmealDto);
+
+        Long setmealId = setmealDto.getId();
+        //先移除更新前的菜品数据
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, setmealId);
+        setmealDishService.remove(queryWrapper);
+
+        //获取新修改的菜品数据,将套餐下的菜品id进行绑定
+        List<SetmealDish> setmealDishes = setmealDto.getSetmealDishes();
+        for (SetmealDish setmealDish : setmealDishes) {
+            setmealDish.setSetmealId(setmealDto.getId());
+        }
+
+        //更新套餐下的菜品数据
+        setmealDishService.saveBatch(setmealDishes);
+    }
 }
