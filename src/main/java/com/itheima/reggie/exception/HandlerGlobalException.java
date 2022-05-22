@@ -33,4 +33,9 @@ public class HandlerGlobalException {
     public R handlerSendMessageInternetException(SendMessageInternetException e) {
         return R.error(e.getMessage());
     }
+
+    @ExceptionHandler(AddressBookNotFoundException.class)
+    public R handlerSendMessageInternetException(AddressBookNotFoundException e) {
+        return R.error(e.getMessage());
+    }
 }
