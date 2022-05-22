@@ -31,7 +31,7 @@ public class User implements Serializable {
 
     //验证码
     @TableField(exist = false)
-    private String verifyCode;
+    private String code;
 
     //性别 0 女 1 男
     private String sex;

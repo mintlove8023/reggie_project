@@ -22,11 +22,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public R login(HttpSession httpSession, User user) {
         //获取验证码
-        Object verifyCode = httpSession.getAttribute(user.getPhone());
+        String verifyCode = user.getCode();
 
         //验证码校验
         Object code = httpSession.getAttribute(user.getPhone());
-        if (verifyCode != null && verifyCode.equals(code)) {
+        if (verifyCode.equals(String.valueOf(code))) {
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(User::getPhone, user.getPhone());
             User u = getOne(queryWrapper);
