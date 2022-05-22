@@ -2,8 +2,7 @@ package com.itheima.reggie.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.itheima.reggie.domain.Setmeal;
-import com.itheima.reggie.domain.SetmealDto;
+import com.itheima.reggie.domain.*;
 
 import java.util.List;
 
@@ -64,4 +63,12 @@ public interface SetmealService extends IService<Setmeal> {
      * @return List集合, 包含所有套餐
      */
     List<Setmeal> selectSetmealByCategoryId(Long categoryId);
+
+    /**
+     * 根据套餐id展示套餐图片
+     *
+     * @param id 套餐id
+     * @return ShoppingCart, 包含购物车套餐信息
+     */
+    List<Dish> selectSetmealImageById(Long id);
 }

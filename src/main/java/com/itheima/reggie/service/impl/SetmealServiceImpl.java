@@ -5,21 +5,19 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.itheima.reggie.domain.Category;
-import com.itheima.reggie.domain.Setmeal;
-import com.itheima.reggie.domain.SetmealDish;
-import com.itheima.reggie.domain.SetmealDto;
+import com.itheima.reggie.domain.*;
 import com.itheima.reggie.exception.SetmealEnableStatusException;
 import com.itheima.reggie.mapper.SetmealMapper;
-import com.itheima.reggie.service.CategoryService;
-import com.itheima.reggie.service.SetmealDishService;
-import com.itheima.reggie.service.SetmealService;
+import com.itheima.reggie.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author 小空
@@ -33,6 +31,9 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private DishService dishService;
 
     @Override
     public void addSetmeal(SetmealDto setmealDto) {
@@ -99,5 +100,23 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         queryWrapper.eq(Setmeal::getCategoryId, categoryId)
                 .eq(Setmeal::getStatus, SETMEAL_STATUS_ENABLE);
         return list(queryWrapper);
+    }
+
+    @Override
+    public List<Dish> selectSetmealImageById(Long id) {
+        //查询套餐下的菜品
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, id);
+        List<SetmealDish> setmealDishes = setmealDishService.list(queryWrapper);
+
+        //获取套餐下的菜品数据
+        List<Dish> dishes = setmealDishes.stream().map(item -> {
+            Long dishId = item.getDishId();
+            Dish dish = dishService.getById(dishId);
+            dish.setCopies(item.getCopies());
+            return dish;
+        }).collect(Collectors.toList());
+
+        return dishes;
     }
 }

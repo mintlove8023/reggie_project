@@ -40,6 +40,9 @@ public class Dish implements Serializable {
     //图片
     private String image;
 
+    //份数
+    @TableField(exist = false)
+    private Integer copies;
 
     @TableField(exist = false)
     private String categoryName;

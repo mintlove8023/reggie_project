@@ -1,9 +1,7 @@
 package com.itheima.reggie.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.itheima.reggie.domain.R;
-import com.itheima.reggie.domain.Setmeal;
-import com.itheima.reggie.domain.SetmealDto;
+import com.itheima.reggie.domain.*;
 import com.itheima.reggie.service.SetmealService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -49,5 +47,11 @@ public class SetmealController {
     public R selectSetmealByCategoryId(Long categoryId) {
         List<Setmeal> setmealList = setmealService.selectSetmealByCategoryId(categoryId);
         return R.success(setmealList);
+    }
+
+    @GetMapping("/dish/{id}")
+    public R selectSetmealImageById(@PathVariable Long id) {
+        List<Dish> setmealOnDishList = setmealService.selectSetmealImageById(id);
+        return R.success(setmealOnDishList);
     }
 }
