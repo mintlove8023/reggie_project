@@ -54,4 +54,10 @@ public class SetmealController {
         List<Dish> setmealOnDishList = setmealService.selectSetmealImageById(id);
         return R.success(setmealOnDishList);
     }
+
+    @GetMapping("{id}")
+    public R echoSetmealById(@PathVariable Long id) {
+        SetmealDto setmealDto = setmealService.echoSetmealById(id);
+        return R.success(setmealDto);
+    }
 }

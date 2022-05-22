@@ -10,6 +10,7 @@ import com.itheima.reggie.exception.SetmealEnableStatusException;
 import com.itheima.reggie.mapper.SetmealMapper;
 import com.itheima.reggie.service.*;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,5 +119,22 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
         }).collect(Collectors.toList());
 
         return dishes;
+    }
+
+    @Override
+    public SetmealDto echoSetmealById(Long id) {
+        //查询根据id查询出套餐
+        Setmeal setmeal = getById(id);
+
+        //根据套餐id查询所有的菜品
+        LambdaQueryWrapper<SetmealDish> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SetmealDish::getSetmealId, setmeal.getId());
+        List<SetmealDish> setmealDishList = setmealDishService.list(queryWrapper);
+
+        //将套餐下的菜品数据设置给Dto
+        SetmealDto setmealDto = new SetmealDto();
+        setmealDto.setSetmealDishes(setmealDishList);
+        BeanUtils.copyProperties(setmeal, setmealDto);
+        return setmealDto;
     }
 }

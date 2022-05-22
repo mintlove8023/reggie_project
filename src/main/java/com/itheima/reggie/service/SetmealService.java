@@ -71,4 +71,12 @@ public interface SetmealService extends IService<Setmeal> {
      * @return ShoppingCart, 包含购物车套餐信息
      */
     List<Dish> selectSetmealImageById(Long id);
+
+    /**
+     * 根据id回显[修改套餐]中的数据
+     *
+     * @param id 套餐id
+     * @return SetmealDto, 包含套餐基本信息,和套餐下的菜品数据
+     */
+    SetmealDto echoSetmealById(Long id);
 }
