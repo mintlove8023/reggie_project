@@ -1,10 +1,14 @@
 package com.itheima.reggie.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.itheima.reggie.domain.Orders;
+import com.itheima.reggie.domain.OrdersDto;
 import com.itheima.reggie.domain.R;
 import com.itheima.reggie.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author 小空
@@ -32,5 +36,18 @@ public class OrdersController {
     public R pay(@RequestBody Orders orders) {
         ordersService.pay(orders);
         return R.success("支付成功!");
+    }
+
+    /**
+     * 分页查询订单(历史订单和最新订单)
+     *
+     * @param page     当前页
+     * @param pageSize 当前页显示的数据个数
+     * @return 订单数据
+     */
+    @GetMapping("/userPage")
+    public R selectOrderPages(int page, int pageSize) {
+        IPage<Orders> p = ordersService.selectOrderPages(page, pageSize);
+        return R.success(p);
     }
 }

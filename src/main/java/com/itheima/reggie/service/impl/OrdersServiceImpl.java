@@ -1,12 +1,15 @@
 package com.itheima.reggie.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.*;
 import com.itheima.reggie.mapper.OrdersMapper;
 import com.itheima.reggie.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
  * @description 订单业务层实现类
  */
 @Service
+@Slf4j
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> implements OrdersService {
     @Autowired
     private ShoppingCartService shoppingCartService;
@@ -34,6 +38,7 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
     @Autowired
     private OrderDetailService orderDetailService;
+
 
     /**
      * 用户下单付钱
@@ -103,5 +108,28 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
 
         //删除当前用户的购物车列表数据
         shoppingCartService.clearShoppingCart();
+    }
+
+    @Override
+    public IPage<Orders> selectOrderPages(int page, int pageSize) {
+        IPage<Orders> p = new Page<>(page, pageSize);
+        //根据当前登录的用户id,获取当前用户订单
+        Long userId = BaseContext.getId();
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Orders::getUserId, userId);
+
+        //分页查询当前用户的订单数据
+        page(p, queryWrapper);
+
+        List<Orders> ordersList = p.getRecords();
+        ordersList.stream().map(item -> {
+            //根据订单id去查询订单详情数据
+            LambdaQueryWrapper<OrderDetail> qw = new LambdaQueryWrapper<>();
+            qw.eq(OrderDetail::getOrderId, item.getId());
+            List<OrderDetail> orderDetailList = orderDetailService.list(qw);
+            item.setOrderDetails(orderDetailList);
+            return item;
+        }).collect(Collectors.toList());
+        return p;
     }
 }

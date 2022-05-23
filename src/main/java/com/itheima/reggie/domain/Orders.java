@@ -1,9 +1,11 @@
 package com.itheima.reggie.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 订单
@@ -21,6 +23,9 @@ public class Orders implements Serializable {
     //订单状态 1待付款，2待派送，3已派送，4已完成，5已取消
     private Integer status;
 
+    //订单详情
+    @TableField(exist = false)
+    private List<OrderDetail> orderDetails;
 
     //下单用户id
     private Long userId;
