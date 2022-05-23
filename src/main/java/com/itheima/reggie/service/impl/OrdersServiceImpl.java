@@ -9,12 +9,16 @@ import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.*;
 import com.itheima.reggie.mapper.OrdersMapper;
 import com.itheima.reggie.service.*;
+import com.itheima.reggie.utils.MyTimeUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -130,6 +134,24 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             item.setOrderDetails(orderDetailList);
             return item;
         }).collect(Collectors.toList());
+        return p;
+    }
+
+    @Override
+    public IPage<Orders> selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime) {
+        //字符串转LocalDateTime对象
+        LocalDateTime begin = MyTimeUtils.string2LocalDateTime(beginTime, DATE_FORMAT_PATTNER);
+        LocalDateTime end = MyTimeUtils.string2LocalDateTime(endTime, DATE_FORMAT_PATTNER);
+
+        //根据条件查询订单数据
+        IPage<Orders> p = new Page<>(page, pageSize);
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(number != null, Orders::getNumber, number)
+                .apply(begin != null, "date_format (order_time,'%Y-%m-%d %H:%i:%S') >= date_format('" + begin + "','%Y-%m-%d %H:%i:%S')")
+                .apply(end != null, "date_format (order_time,'%Y-%m-%d %H:%i:%S') <= date_format('" + end + "','%Y-%m-%d %H:%i:%S')");
+        page(p, queryWrapper);
+
+        //返回分页查询条件
         return p;
     }
 }

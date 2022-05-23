@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Orders;
 import com.itheima.reggie.domain.OrdersDto;
 
+import java.time.LocalDateTime;
+
 /**
  * @author 小空
  * @create 2022-05-20 16:46
@@ -12,6 +14,8 @@ import com.itheima.reggie.domain.OrdersDto;
  * @see com.itheima.reggie.service.impl.OrdersServiceImpl
  */
 public interface OrdersService extends IService<Orders> {
+    String DATE_FORMAT_PATTNER = "yyyy-MM-dd HH:mm:ss";
+
     /**
      * 订单支付
      *
@@ -27,4 +31,16 @@ public interface OrdersService extends IService<Orders> {
      * @return 订单数据
      */
     IPage<Orders> selectOrderPages(int page, int pageSize);
+
+    /**
+     * 分页条件查询订单
+     *
+     * @param page      当前页
+     * @param pageSize  当前页显示的数据条数
+     * @param number    订单号
+     * @param beginTime 订单下单的开始时间
+     * @param endTime   订单下单的结束时间
+     * @return Page对象, 包含订单数据
+     */
+    IPage<Orders> selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime);
 }

@@ -8,6 +8,7 @@ import com.itheima.reggie.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -48,6 +49,12 @@ public class OrdersController {
     @GetMapping("/userPage")
     public R selectOrderPages(int page, int pageSize) {
         IPage<Orders> p = ordersService.selectOrderPages(page, pageSize);
+        return R.success(p);
+    }
+
+    @GetMapping("/page")
+    public R selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime) {
+        IPage<Orders> p = ordersService.selectOrdersPage(page, pageSize, number, beginTime, endTime);
         return R.success(p);
     }
 }
