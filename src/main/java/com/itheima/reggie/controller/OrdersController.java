@@ -57,4 +57,10 @@ public class OrdersController {
         IPage<Orders> p = ordersService.selectOrdersPage(page, pageSize, number, beginTime, endTime);
         return R.success(p);
     }
+
+    @PutMapping
+    public R updateDeliveryStatus(@RequestBody Orders orders) {
+        ordersService.updateDeliveryStatus(orders);
+        return R.success("派送状态修改成功!");
+    }
 }

@@ -3,9 +3,6 @@ package com.itheima.reggie.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.itheima.reggie.domain.Orders;
-import com.itheima.reggie.domain.OrdersDto;
-
-import java.time.LocalDateTime;
 
 /**
  * @author 小空
@@ -43,4 +40,9 @@ public interface OrdersService extends IService<Orders> {
      * @return Page对象, 包含订单数据
      */
     IPage<Orders> selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime);
+
+    /**
+     * @param orders Orders订单对象
+     */
+    void updateDeliveryStatus(Orders orders);
 }
