@@ -45,4 +45,11 @@ public interface OrdersService extends IService<Orders> {
      * @param orders Orders订单对象
      */
     void updateDeliveryStatus(Orders orders);
+
+    /**
+     * 再来一单操作
+     *
+     * @param orders 订单对象
+     */
+    void oneMoreOrder(Orders orders);
 }

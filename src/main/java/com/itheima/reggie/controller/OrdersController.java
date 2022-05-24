@@ -63,4 +63,10 @@ public class OrdersController {
         ordersService.updateDeliveryStatus(orders);
         return R.success("派送状态修改成功!");
     }
+
+    @PostMapping("/again")
+    public R oneMoreOrder(@RequestBody Orders orders) {
+        ordersService.oneMoreOrder(orders);
+        return R.success(null);
+    }
 }

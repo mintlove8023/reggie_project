@@ -160,4 +160,41 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
                 .eq(Orders::getId, orders.getId());
         update(updateWrapper);
     }
+
+    @Override
+    public void oneMoreOrder(Orders orders) {
+        //根据当前登录的用户id去查询购物车,如果购物车有数据则清除
+        Long userId = BaseContext.getId();
+        LambdaQueryWrapper<ShoppingCart> qw = new LambdaQueryWrapper<>();
+        qw.eq(ShoppingCart::getUserId, userId);
+        int shoppingCarServiceCount = shoppingCartService.count(qw);
+        if (shoppingCarServiceCount > 0) {
+            shoppingCartService.clearShoppingCart();
+        }
+
+        //获取订单id
+        Long orderId = orders.getId();
+
+        //查询订单详情,获取到订单中点的菜品数据
+        LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDetail::getOrderId, orderId);
+        List<OrderDetail> orderDetailList = orderDetailService.list(queryWrapper);
+
+        //再来一单,将订单中的数据设置到购物车中
+        List<ShoppingCart> shoppingCartList = orderDetailList.stream().map(item -> {
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setName(item.getName());
+            shoppingCart.setImage(item.getImage());
+            shoppingCart.setUserId(BaseContext.getId());
+            shoppingCart.setDishId(item.getDishId());
+            shoppingCart.setSetmealId(item.getSetmealId());
+            shoppingCart.setDishFlavor(item.getDishFlavor());
+            shoppingCart.setNumber(item.getNumber());
+            shoppingCart.setAmount(item.getAmount());
+            return shoppingCart;
+        }).collect(Collectors.toList());
+
+        //存储数据到购物车
+        shoppingCartService.saveBatch(shoppingCartList);
+    }
 }
