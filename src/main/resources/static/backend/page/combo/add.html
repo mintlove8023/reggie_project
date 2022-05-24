@@ -278,7 +278,7 @@
           <i slot="prefix" class="el-input__icon el-icon-search" style="cursor: pointer" @click="seachHandle"></i>
         </el-input>
         <!-- <AddDish ref="adddish" :check-list="checkList" :seach-key="seachKey" @checkList="getCheckList" /> -->
-        
+
         <div class="addDishCon">
           <div class="leftCont">
             <div
@@ -332,7 +332,7 @@
                 :key="ind"
                 class="item"
               >
-                <span>{{ item.dishName }}</span>
+                <span>{{ item.name }}</span>
                 <span class="price">￥ {{ Number(item.price)/100 }} </span>
                 <span
                   class="del"
@@ -347,7 +347,7 @@
             </div>
           </div>
         </div>
-        
+
         <span slot="footer" class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
           <el-button type="primary" @click="addTableList">确 定</el-button>
@@ -519,11 +519,11 @@
           addTableList() {
             this.dishTable = JSON.parse(JSON.stringify(this.checkList))
             this.dishTable.forEach((n) => {
-              n.copies = 1
+              //n.copies = this.ruleForm.copies
             })
             this.dialogVisible = false
             // 添加处理逻辑清空选中list
-            this.checkList = []
+            //this.checkList = []
           },
           submitForm(formName, st) {
             this.$refs[formName].validate((valid) => {
@@ -540,11 +540,11 @@
                 prams.categoryId = this.ruleForm.idType
                 if(prams.setmealDishes.length < 1){
                   this.$message.error('请选择菜品！')
-                  return 
+                  return
                 }
                 if(!this.imageUrl){
                   this.$message.error('请上传套餐图片')
-                  return 
+                  return
                 }
                 // delete prams.dishList
                 if (this.actionType == 'add') {
@@ -659,7 +659,7 @@
                 let newArr = res.data;
                 newArr.forEach((n) => {
                   n.dishId = n.id
-                  n.copies = 1
+                  //n.copies = 1
                   // n.dishCopies = 1
                   n.dishName = n.name
                 })
