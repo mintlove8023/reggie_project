@@ -7,6 +7,8 @@ import com.itheima.reggie.domain.User;
 import com.itheima.reggie.mapper.UserMapper;
 import com.itheima.reggie.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -19,13 +21,18 @@ import javax.servlet.http.HttpSession;
 @Service
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     public R login(HttpSession httpSession, User user) {
         //获取验证码
         String verifyCode = user.getCode();
 
         //验证码校验
-        Object code = httpSession.getAttribute(user.getPhone());
+        //Object code = httpSession.getAttribute(user.getPhone());
+        //通过手机号获取验证码,从Redis服务器中
+        Object code = redisTemplate.opsForValue().get(user.getPhone());
         if (verifyCode.equals(String.valueOf(code))) {
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(User::getPhone, user.getPhone());
@@ -38,6 +45,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 save(u);
             }
             httpSession.setAttribute("user", u.getId());
+            //登录成功后删除键
+            redisTemplate.delete(user.getPhone());
             return R.success(u);
         }
         return R.error("登录失败!");
