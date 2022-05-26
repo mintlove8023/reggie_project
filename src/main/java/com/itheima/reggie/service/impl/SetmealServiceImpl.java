@@ -12,6 +12,8 @@ import com.itheima.reggie.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -37,6 +39,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     private DishService dishService;
 
     @Override
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void addSetmeal(SetmealDto setmealDto) {
         //将套餐基本信息存储到数据库中
         save(setmealDto);
@@ -69,6 +72,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void deleteSetmeal(Long[] ids) {
         //1:必须先判断套餐是否为启用状态,如果为启用状态,则抛出错误提示,告诉不能删除
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
@@ -89,6 +93,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void updateSetmealStatus(Integer status, Long[] ids) {
         LambdaUpdateWrapper<Setmeal> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Setmeal::getStatus, status).in(Setmeal::getId, Arrays.asList(ids));
@@ -96,6 +101,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @Cacheable(value = "setmealCache", key = "#categoryId")
     public List<Setmeal> selectSetmealByCategoryId(Long categoryId) {
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Setmeal::getCategoryId, categoryId)
@@ -139,6 +145,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper, Setmeal> impl
     }
 
     @Override
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public void updateSetmeal(SetmealDto setmealDto) {
         updateById(setmealDto);
 

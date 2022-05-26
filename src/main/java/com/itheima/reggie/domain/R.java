@@ -2,11 +2,12 @@ package com.itheima.reggie.domain;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class R {
+public class R implements Serializable {
 
     private Integer code; //编码：1成功，0和其它数字为失败
 
