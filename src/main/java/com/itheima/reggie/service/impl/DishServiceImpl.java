@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,9 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Autowired
     private SetmealDishService setmealDishService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public void addDish(DishDto dishDto) {
@@ -141,32 +146,39 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
     @Override
     public List<DishDto> selectDishByCategoryId(Long categoryId, String name) {
-        //根据菜品分类查询所有非停售的菜品
-        LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(categoryId != null, Dish::getCategoryId, categoryId)
-                .eq(Dish::getStatus, 1)
-                .like(StringUtils.isNotBlank(name), Dish::getName, name);
-        List<Dish> DishList = list(queryWrapper);
+        String redisValueKey = "dish:categoryId:" + categoryId + ":selectDishByCategoryId";
+        ValueOperations<String, List<DishDto>> valueOper = redisTemplate.opsForValue();
+        List<DishDto> dishDtoList = valueOper.get(redisValueKey);
+        if (dishDtoList == null) {
+            //根据菜品分类查询所有非停售的菜品
+            LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(categoryId != null, Dish::getCategoryId, categoryId)
+                    .eq(Dish::getStatus, 1)
+                    .like(StringUtils.isNotBlank(name), Dish::getName, name);
+            List<Dish> DishList = list(queryWrapper);
 
-        //根据菜品id查询指定的菜品口味
-        List<DishDto> dishDtoList = DishList.stream().map(item -> {
-            DishDto dishDto = new DishDto();
-            BeanUtils.copyProperties(item, dishDto);
-            Long cid = item.getCategoryId();
-            Category category = categoryService.getById(cid);
-            if (category != null) {
-                dishDto.setCategoryName(category.getName());
-            }
+            //根据菜品id查询指定的菜品口味
+            dishDtoList = DishList.stream().map(item -> {
+                DishDto dishDto = new DishDto();
+                BeanUtils.copyProperties(item, dishDto);
+                Long cid = item.getCategoryId();
+                Category category = categoryService.getById(cid);
+                if (category != null) {
+                    dishDto.setCategoryName(category.getName());
+                }
 
-            //获取菜品id
-            Long dishId = item.getId();
-            LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
-            lqw.eq(DishFlavor::getDishId, dishId);
-            List<DishFlavor> dishFlavorList = dishFlavorService.list(lqw);
-            //设置菜品口味
-            dishDto.setFlavors(dishFlavorList);
-            return dishDto;
-        }).collect(Collectors.toList());
+                //获取菜品id
+                Long dishId = item.getId();
+                LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
+                lqw.eq(DishFlavor::getDishId, dishId);
+                List<DishFlavor> dishFlavorList = dishFlavorService.list(lqw);
+                //设置菜品口味
+                dishDto.setFlavors(dishFlavorList);
+                return dishDto;
+            }).collect(Collectors.toList());
+
+            valueOper.set(redisValueKey, dishDtoList);
+        }
         return dishDtoList;
     }
 }
