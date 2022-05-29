@@ -59,4 +59,4 @@ mybatis-plus:
       id-type: ASSIGN_ID
 #菜品图片存放的路径
 reggie:
-  img: F:\reggie_project_img\dish_img\
+  img: /usr/local/img/
