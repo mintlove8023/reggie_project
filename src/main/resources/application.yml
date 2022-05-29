@@ -42,7 +42,7 @@ spring:
       sql:
         show: true #开启SQL显示，默认false
   redis:
-      host: localhost
+      host: 192.168.10.20
       port: 6379
       #password: root@123456
       database: 0
