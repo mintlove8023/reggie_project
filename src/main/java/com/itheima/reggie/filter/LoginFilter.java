@@ -38,7 +38,11 @@ public class LoginFilter implements Filter {
                 "/backend/**",
                 "/front/**",
                 "/user/sendMsg",
-                "/user/login"
+                "/user/login",
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"
         };
 
         //获取请求路径
