@@ -39,7 +39,7 @@ public interface OrdersService extends IService<Orders> {
      * @param endTime   订单下单的结束时间
      * @return Page对象, 包含订单数据
      */
-    IPage<Orders> selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime);
+    IPage<Orders> selectOrdersPage(int page, int pageSize, String number, String beginTime, String endTime);
 
     /**
      * @param orders Orders订单对象

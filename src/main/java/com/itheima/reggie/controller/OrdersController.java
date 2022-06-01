@@ -53,7 +53,7 @@ public class OrdersController {
     }
 
     @GetMapping("/page")
-    public R selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime) {
+    public R selectOrdersPage(int page, int pageSize, String number, String beginTime, String endTime) {
         IPage<Orders> p = ordersService.selectOrdersPage(page, pageSize, number, beginTime, endTime);
         return R.success(p);
     }

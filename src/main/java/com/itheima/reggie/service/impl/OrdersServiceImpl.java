@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.itheima.reggie.common.BaseContext;
 import com.itheima.reggie.domain.*;
 import com.itheima.reggie.mapper.OrdersMapper;
@@ -16,7 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -136,17 +140,13 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     }
 
     @Override
-    public IPage<Orders> selectOrdersPage(int page, int pageSize, Long number, String beginTime, String endTime) {
-        //字符串转LocalDateTime对象
-        LocalDateTime begin = MyTimeUtils.string2LocalDateTime(beginTime, DATE_FORMAT_PATTNER);
-        LocalDateTime end = MyTimeUtils.string2LocalDateTime(endTime, DATE_FORMAT_PATTNER);
-
+    public IPage<Orders> selectOrdersPage(int page, int pageSize, String number, String beginTime, String endTime) {
         //根据条件查询订单数据
         IPage<Orders> p = new Page<>(page, pageSize);
         LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(number != null, Orders::getNumber, number)
-                .apply(begin != null, "date_format (order_time,'%Y-%m-%d %H:%i:%S') >= date_format('" + begin + "','%Y-%m-%d %H:%i:%S')")
-                .apply(end != null, "date_format (order_time,'%Y-%m-%d %H:%i:%S') <= date_format('" + end + "','%Y-%m-%d %H:%i:%S')");
+                .ge(beginTime != null, Orders::getOrderTime, beginTime)
+                .le(endTime != null, Orders::getOrderTime, endTime);
         page(p, queryWrapper);
 
         //返回分页查询条件
@@ -181,18 +181,17 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<OrderDetail> orderDetailList = orderDetailService.list(queryWrapper);
 
         //再来一单,将订单中的数据设置到购物车中
-        List<ShoppingCart> shoppingCartList = orderDetailList.stream().map(item -> {
-            ShoppingCart shoppingCart = new ShoppingCart();
-            shoppingCart.setName(item.getName());
-            shoppingCart.setImage(item.getImage());
-            shoppingCart.setUserId(BaseContext.getId());
-            shoppingCart.setDishId(item.getDishId());
-            shoppingCart.setSetmealId(item.getSetmealId());
-            shoppingCart.setDishFlavor(item.getDishFlavor());
-            shoppingCart.setNumber(item.getNumber());
-            shoppingCart.setAmount(item.getAmount());
-            return shoppingCart;
-        }).collect(Collectors.toList());
+        List<ShoppingCart> shoppingCartList = orderDetailList.stream().map(item ->
+                ShoppingCart.builder()
+                        .name(item.getName())
+                        .image(item.getImage())
+                        .userId(BaseContext.getId())
+                        .dishId(item.getDishId())
+                        .setmealId(item.getSetmealId())
+                        .dishFlavor(item.getDishFlavor())
+                        .number(item.getNumber())
+                        .amount(item.getAmount())
+                        .build()).collect(Collectors.toList());
 
         //存储数据到购物车
         shoppingCartService.saveBatch(shoppingCartList);
